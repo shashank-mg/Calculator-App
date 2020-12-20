@@ -1,6 +1,5 @@
 body {
-  background: url("https://images.unsplash.com/photo-1541138858526-9f296df15693?ixid=MXwxMjA3fDB8MHxzZWFyY2h8OHx8d29vZHxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60")
-    repeat;
+  background: url(woods.jpg) repeat;
   background-size: cover;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -22,6 +21,11 @@ body {
   box-shadow: 0px 0px 4px 4px black;
 }
 
+.take-in p,
+.update p {
+  float: right;
+}
+
 .holder {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -38,6 +42,9 @@ body {
   padding: 5px;
   color: #fff;
   font-size: 25px;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: repeat(2, 50%);
 }
 
 .plus {

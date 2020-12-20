@@ -24,6 +24,8 @@ let zero = document.querySelector(".zero");
 let dot = document.querySelector(".dot");
 let equals = document.querySelector(".equals");
 let multiply = document.querySelector(".multiply");
+let take_p = document.querySelector(".take-in-p");
+let update_p = document.querySelector(".update-p");
 
 // Button Clicks
 
@@ -57,6 +59,7 @@ clear.addEventListener("click", () => calculator.clearOne());
 sine.addEventListener("click", () => calculator.trig("Sine of "));
 cosine.addEventListener("click", () => calculator.trig("Cos of "));
 tan.addEventListener("click", () => calculator.trig("Tan of "));
+
 // roots
 sq_root.addEventListener("click", () => calculator.roots("sq_root of "));
 c_root.addEventListener("click", () => calculator.roots("cb_root of "));
@@ -64,3 +67,28 @@ c_root.addEventListener("click", () => calculator.roots("cb_root of "));
 // brackets
 open_b.addEventListener("click", () => calculator.brackets("("));
 close_b.addEventListener("click", () => calculator.brackets(" )"));
+
+// Key addEventListener
+
+document.addEventListener("keydown", (e) => {
+  if (e.keyCode === 107) calculator.operator("+");
+  else if (e.keyCode === 106) calculator.operator("*");
+  else if (e.keyCode === 109) calculator.operator("-");
+  else if (e.keyCode === 111) calculator.operator("/");
+  else if (e.keyCode === 8) calculator.clearOne();
+  else if (e.keyCode === 13) calculator.result();
+  else if (e.keyCode === 110) calculator.number(".");
+  else if (e.keyCode === 96) calculator.number(0);
+  else if (e.keyCode === 97) calculator.number(1);
+  else if (e.keyCode === 98) calculator.number(2);
+  else if (e.keyCode === 99) calculator.number(3);
+  else if (e.keyCode === 100) calculator.number(4);
+  else if (e.keyCode === 101) calculator.number(5);
+  else if (e.keyCode === 102) calculator.number(6);
+  else if (e.keyCode === 103) calculator.number(7);
+  else if (e.keyCode === 104) calculator.number(8);
+  else if (e.keyCode === 105) calculator.number(9);
+  else if (e.keyCode === 48) calculator.brackets(" )");
+  else if (e.keyCode === 57) calculator.brackets("(");
+  else if (e.keyCode === 53) calculator.operator("%");
+});

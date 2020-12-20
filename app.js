@@ -1,41 +1,3 @@
-let Stack = function () {
-  this.count = 0;
-
-  this.storage = [];
-
-  this.push = function (val) {
-    this.storage.push(val);
-    this.count++;
-  };
-
-  this.pop = function () {
-    if (this.count === 0) return "stack empty";
-    this.count--;
-    let deleted = this.storage.pop();
-    return deleted;
-  };
-
-  this.length = function () {
-    return this.count;
-  };
-
-  this.peek = function () {
-    if (this.count === 0) return "empty stack";
-    return this.storage[0];
-  };
-
-  this.allEle = function () {
-    return this.storage;
-  };
-};
-
-var stack = new Stack();
-
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-
 class Calculator {
   constructor() {
     this.expression = "";
@@ -45,21 +7,20 @@ class Calculator {
   number(n) {
     this.digit += String(n);
     if (this.digit.length > 1) {
-      screen.textContent += n;
+      take_p.textContent += n;
       stack.storage[stack.count - 1] = this.digit;
     } else {
-      screen.textContent += n;
+      take_p.textContent += n;
       stack.push(this.digit);
     }
-    console.log(stack.count);
   }
 
   operator(o) {
     this.digit = "";
     this.expression = "";
-    screen.textContent += "  ";
-    screen.textContent += o;
-    screen.textContent += "  ";
+    take_p.textContent += "  ";
+    take_p.textContent += o;
+    take_p.textContent += "  ";
     this.expression = o;
     stack.push(o);
     this.expression = "";
@@ -73,14 +34,16 @@ class Calculator {
   clearOne() {
     this.digit = "";
     stack.pop();
-    screen.textContent = stack.allEle().join(" ");
-    screen.textContent += "  ";
+    take_p.textContent = stack.allEle().join(" ");
+    take_p.textContent += "  ";
   }
 
   special_perf(action) {
     this.digit = "";
-    if (this.expression !== "") this.expression = "";
-    screen.textContent += action + "  ";
+    if (this.expression !== "") {
+      this.expression = "";
+    }
+    take_p.textContent += action + "  ";
     this.expression = action;
     stack.push(this.expression);
     this.expression = "";
@@ -92,7 +55,9 @@ class Calculator {
 
   brackets(br) {
     this.digit = "";
-    if (this.expression !== "") stack.push(this.expression);
+    if (this.expression !== "") {
+      stack.push(this.expression);
+    }
     this.special_perf(br);
   }
 
