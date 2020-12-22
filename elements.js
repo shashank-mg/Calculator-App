@@ -2,8 +2,8 @@ let screen = document.querySelector(".screen");
 let sine = document.querySelector(".sine");
 let cosine = document.querySelector(".cosine");
 let tan = document.querySelector(".tan");
-let open_b = document.querySelector(".open_b");
-let close_b = document.querySelector(".close_b");
+let one_by_x = document.querySelector(".one_by_x");
+let clear_one = document.querySelector(".clear_one");
 let clear = document.querySelector(".clear");
 let nine = document.querySelector(".nine");
 let eight = document.querySelector(".eight");
@@ -53,20 +53,20 @@ percent.addEventListener("click", () => calculator.operator("%"));
 equals.addEventListener("click", () => calculator.result());
 
 // clear
-clear.addEventListener("click", () => calculator.clearOne());
+clear.addEventListener("click", () => calculator.clearAll());
 
 // Trignometric functions
-sine.addEventListener("click", () => calculator.trig("Sine of "));
-cosine.addEventListener("click", () => calculator.trig("Cos of "));
-tan.addEventListener("click", () => calculator.trig("Tan of "));
+sine.addEventListener("click", () => calculator.trig("sin"));
+cosine.addEventListener("click", () => calculator.trig("cos"));
+tan.addEventListener("click", () => calculator.trig("tan"));
 
 // roots
-sq_root.addEventListener("click", () => calculator.roots("sq_root of "));
-c_root.addEventListener("click", () => calculator.roots("cb_root of "));
+sq_root.addEventListener("click", () => calculator.roots("sqrt"));
+c_root.addEventListener("click", () => calculator.roots("cbrt"));
 
 // brackets
-open_b.addEventListener("click", () => calculator.brackets("("));
-close_b.addEventListener("click", () => calculator.brackets(" )"));
+one_by_x.addEventListener("click", () => calculator.oneByX());
+// clear_one.addEventListener("click", () => calculator.oneByX());
 
 // Key addEventListener
 
