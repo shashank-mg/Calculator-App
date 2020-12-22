@@ -26,7 +26,7 @@ let equals = document.querySelector(".equals");
 let multiply = document.querySelector(".multiply");
 let take_p = document.querySelector(".take-in-p");
 let update_p = document.querySelector(".update-p");
-
+take_p.textContent = 0;
 // Button Clicks
 
 // Numeral Buttons

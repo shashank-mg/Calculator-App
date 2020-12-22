@@ -1,0 +1,32 @@
+ function brackets(){
+ switch (br) {
+   case "(":
+     switch (prevEle) {
+       case undefined:
+       case "+":
+       case "-":
+       case "/":
+       case "*":
+       case "%":
+         o_count.textContent++;
+         stack.push(br);
+         break;
+     }
+     break;
+   case ")":
+     if (
+       (prevEle === "(" || Array.isArray(prevEle)) &&
+       o_count.textContent >= "1"
+     ) {
+       stack.push(br);
+     }
+     if (o_count.textContent == "") break;
+     o_count.textContent--;
+     if (o_count.textContent == 0) {
+       o_count.textContent = "";
+       c_count.textContent = "";
+       break;
+     }
+     break;
+ }
+ }
