@@ -7,6 +7,10 @@ class Calculator {
     this.store = "";
   }
 
+  blink = () => {
+    if (stack.length() > 0) take_p.classList.remove("blink_me");
+  };
+
   number = (n) => {
     this.flag = 1;
     n = n.toString();
@@ -29,6 +33,7 @@ class Calculator {
       }
     }
     console.log(stack.allEle());
+    this.blink();
   };
 
   operator = (o) => {
@@ -40,8 +45,9 @@ class Calculator {
       update_p.textContent = `${this.store} ${o}`;
     } else if (Array.isArray(prevEle) && stack.length() === 3) {
       let result = this.normal_calculate(stack.allEle());
-      if (~result) {
+      if (result) {
         update_p.textContent = `${result} ${o}`;
+        // this.normalOp = result;
         result = Array.from(result.toString());
         while (true) {
           let popped = stack.pop();
@@ -86,15 +92,19 @@ class Calculator {
       }
     }
     this.flag = 1;
+    this.blink();
     console.log(stack.allEle());
   };
 
   result = () => {
     this.flag = 1;
     console.log(stack.allEle());
+    this.blink();
   };
 
-  clearOne = () => {};
+  clearOne = () => {
+    let prevEle = stack.lastEle();
+  };
 
   clearAll = (def = 0) => {
     this.store = "";
@@ -104,6 +114,7 @@ class Calculator {
     this.num_stack = [];
     stack.count = 0;
     stack.storage = [];
+    take_p.classList.add("blink_me");
   };
 
   trig = (t_fun) => {
@@ -170,6 +181,7 @@ class Calculator {
       }
     }
     console.log(stack.allEle());
+    this.blink();
   };
 
   roots = (rt) => {
@@ -239,6 +251,7 @@ class Calculator {
       }
     }
     console.log(stack.allEle());
+    this.blink();
   };
 
   oneByX = () => {
@@ -247,37 +260,64 @@ class Calculator {
     if (Array.isArray(prevEle) && stack.length() <= 2) {
       let result = this.oneByX_calculate(prevEle);
       this.store = result;
-      if (~result) {
+      if (result) {
         update_p.textContent = `1/${prevEle.join("")} = ${result}`;
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
         take_p.textContent = this.store;
+      } else if (result === undefined) {
+        this.clearAll("Invalid Syntax");
       }
     } else if (Array.isArray(prevEle) && stack.length() === 3) {
       let result = this.oneByX_calculate(prevEle);
-      if (~result) {
+      if (result) {
         update_p.textContent = `1/${prevEle.join("")} = ${result}`;
-      }
-      result = Array.from(result.toString());
-      stack.pop();
-      stack.push(result);
-      this.store = this.normal_calculate(stack.allEle());
-      take_p.textContent = this.store;
-      console.log(stack.allEle());
+        result = Array.from(result.toString());
+        stack.pop();
+        stack.push(result);
+        this.store = this.normal_calculate(stack.allEle());
+        take_p.textContent = this.store;
+        console.log(stack.allEle());
 
-      this.store = this.normal_calculate(stack.allEle());
-      take_p.textContent = this.store;
-      while (true) {
-        let popped = stack.pop();
-        if (!popped) break;
+        this.store = this.normal_calculate(stack.allEle());
+        take_p.textContent = this.store;
+        while (true) {
+          let popped = stack.pop();
+          if (!popped) break;
+        }
+        console.log(stack.allEle(), this.store.toString());
+        stack.push(Array.from(this.store.toString()));
+        console.log(stack.allEle());
+      } else if (result === undefined) {
+        this.clearAll("Invalid Syntax");
       }
-      console.log(stack.allEle(), this.store.toString());
-      stack.push(Array.from(this.store.toString()));
-      console.log(stack.allEle());
     } else {
-      this.clearAll("Invalid Syntax");
+      switch (prevEle) {
+        case "%":
+        case "-":
+        case "/":
+        case "*":
+        case "+":
+          stack.pop();
+          let result = this.oneByX_calculate(stack.lastEle());
+          this.store = result;
+          if (result) {
+            update_p.textContent = `1/( ${stack
+              .lastEle()
+              .join("")} ) = ${result}`;
+          } else if (result === undefined) {
+            this.clearAll("Invalid Syntax");
+            break;
+          }
+          take_p.textContent = this.store;
+          result = Array.from(result.toString());
+          stack.pop();
+          stack.push(result);
+          break;
+      }
     }
+    this.blink();
     console.log(stack.allEle());
   };
 
@@ -290,17 +330,13 @@ class Calculator {
       case "-":
         return a1 - a2;
       case "/":
-        if (a2 === 0) {
-          this.flag = 0;
-          break;
-        } else {
-          console.log(a1 / a2);
-          return a1 / a2;
-        }
+        if (a2 === 0) this.flag = 0;
+        else return a1 / a2;
       case "*":
         return a1 * a2;
       case "%":
-        return (a1 / a2) * 100;
+        if (a2 === 0) this.flag = 0;
+        else return (a1 / a2) * 100;
     }
   };
 

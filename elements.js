@@ -27,6 +27,7 @@ let multiply = document.querySelector(".multiply");
 let take_p = document.querySelector(".take-in-p");
 let update_p = document.querySelector(".update-p");
 take_p.textContent = 0;
+
 // Button Clicks
 
 // Numeral Buttons
@@ -54,6 +55,7 @@ equals.addEventListener("click", () => calculator.result());
 
 // clear
 clear.addEventListener("click", () => calculator.clearAll());
+clear_one.addEventListener("click", () => calculator.clearOne());
 
 // Trignometric functions
 sine.addEventListener("click", () => calculator.trig("sin"));
@@ -66,7 +68,6 @@ c_root.addEventListener("click", () => calculator.roots("cbrt"));
 
 // brackets
 one_by_x.addEventListener("click", () => calculator.oneByX());
-// clear_one.addEventListener("click", () => calculator.oneByX());
 
 // Key addEventListener
 
@@ -88,7 +89,12 @@ document.addEventListener("keydown", (e) => {
   else if (e.keyCode === 103) calculator.number(7);
   else if (e.keyCode === 104) calculator.number(8);
   else if (e.keyCode === 105) calculator.number(9);
-  else if (e.keyCode === 48) calculator.brackets(" )");
-  else if (e.keyCode === 57) calculator.brackets("(");
   else if (e.keyCode === 53) calculator.operator("%");
+  else if (e.keyCode === 67) calculator.trig("cos");
+  else if (e.keyCode === 83) calculator.trig("sin");
+  else if (e.keyCode === 84) calculator.trig("tan");
+  else if (e.keyCode === 46) calculator.clearAll();
+  else if (e.keyCode === 191) calculator.oneByX();
+  else if (e.keyCode === 90) calculator.roots("sqrt");
+  else if (e.keyCode === 88) calculator.roots("cbrt");
 });

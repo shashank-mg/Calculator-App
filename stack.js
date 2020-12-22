@@ -40,3 +40,7 @@ class Stack {
 }
 
 let stack = new Stack();
+
+if (stack.length() === 0) {
+  take_p.classList.add("blink_me");
+}
