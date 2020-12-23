@@ -24,7 +24,7 @@ class Stack {
 
   peek = () => {
     if (this.count > 0) {
-      return this.storage[this.count];
+      return this.storage[0];
     } else {
       return "stack empty";
     }

@@ -1,19 +1,25 @@
 class Calculator {
   constructor() {
     this.expression = "";
-    this.digit = "";
+    this.record = 0;
     this.num_stack;
     this.flag = 1;
     this.store = "";
   }
 
   blink = () => {
-    if (stack.length() > 0) take_p.classList.remove("blink_me");
+    if (stack.length() > 0) {
+      take_p.classList.remove("blink_me");
+    }
   };
 
   number = (n) => {
     this.flag = 1;
     n = n.toString();
+    if (this.record) {
+      stack.pop();
+      this.record = 0;
+    }
 
     if (Array.isArray(stack.lastEle())) {
       if (this.n_stack.length < 21) {
@@ -32,22 +38,24 @@ class Calculator {
         this.store += n;
       }
     }
-    console.log(stack.allEle());
+
     this.blink();
   };
 
   operator = (o) => {
+    this.record = 0;
     take_p.textContent = "";
     this.flag = 1;
     let prevEle = stack.lastEle();
     if (Array.isArray(prevEle) && stack.length() === 1) {
       stack.push(o);
-      update_p.textContent = `${this.store} ${o}`;
+      update_p.textContent = `${stack.peek().join("")} ${o}`;
     } else if (Array.isArray(prevEle) && stack.length() === 3) {
       let result = this.normal_calculate(stack.allEle());
-      if (result) {
+
+      if (result === undefined) this.clearAll("Invalid Syntax");
+      else {
         update_p.textContent = `${result} ${o}`;
-        // this.normalOp = result;
         result = Array.from(result.toString());
         while (true) {
           let popped = stack.pop();
@@ -55,9 +63,9 @@ class Calculator {
         }
         stack.push(result);
         stack.push(o);
-      } else {
-        this.clearAll("Invalid Syntax");
       }
+    } else if (stack.length() === 2) {
+      update_p.textContent = `${stack.peek().join("")} ${o}`;
     } else {
       switch (prevEle) {
         case "sin":
@@ -93,17 +101,72 @@ class Calculator {
     }
     this.flag = 1;
     this.blink();
-    console.log(stack.allEle());
   };
 
   result = () => {
     this.flag = 1;
-    console.log(stack.allEle());
+    this.record = 1;
+    let prevEle = stack.lastEle();
+    if (stack.length() <= 2) {
+      let combine;
+      if (Array.isArray(prevEle)) {
+        combine = prevEle.join("");
+        this.store = combine;
+        take_p.textContent = `= ${this.store}`;
+        update_p.textContent = "";
+      } else {
+        switch (prevEle) {
+          case "+":
+          case "-":
+            stack.push(["0"]);
+            break;
+          case "*":
+          case "/":
+          case "%":
+            stack.push(["1"]);
+            break;
+        }
+        let result = this.normal_calculate(stack.allEle());
+        if (result === undefined) this.clearAll("Invalid Syntax");
+        else {
+          take_p.textContent = `= ${result}`;
+          update_p.textContent = "";
+          result = Array.from(result.toString());
+          while (true) {
+            let popped = stack.pop();
+            if (!popped) break;
+          }
+          stack.push(result);
+        }
+      }
+    } else {
+      let result = this.normal_calculate(stack.allEle());
+      if (result === undefined) this.clearAll("Invalid Syntax");
+      else {
+        take_p.textContent = `= ${result}`;
+        update_p.textContent = "";
+        result = Array.from(result.toString());
+        while (true) {
+          let popped = stack.pop();
+          if (!popped) break;
+        }
+        stack.push(result);
+      }
+    }
+
     this.blink();
   };
 
   clearOne = () => {
     let prevEle = stack.lastEle();
+    if (!this.record) {
+      if (Array.isArray(prevEle)) {
+        this.n_stack.pop();
+        let change = Array.from(take_p.textContent);
+        change.pop();
+        take_p.textContent = change.join("");
+      }
+    }
   };
 
   clearAll = (def = 0) => {
@@ -118,46 +181,53 @@ class Calculator {
   };
 
   trig = (t_fun) => {
+    this.record = 1;
     this.flag = 1;
     let prevEle = stack.lastEle();
     if (Array.isArray(prevEle) && stack.length() <= 2) {
       let result = this.trigometric_calculate(prevEle, t_fun);
       this.store = result;
-      if (~result) {
+      if (result === undefined) this.clearAll("Invalid syntax");
+      else {
         update_p.textContent = `${t_fun} ( ${prevEle.join("")} ) = ${result}`;
+
+        result = Array.from(result.toString());
+        stack.pop();
+        stack.push(result);
+
+        take_p.textContent = this.store;
       }
-      result = Array.from(result.toString());
-      stack.pop();
-      stack.push(result);
-      console.log(stack.allEle());
-      take_p.textContent = this.store;
     } else if (Array.isArray(prevEle) && stack.length() === 3) {
       let result = this.trigometric_calculate(prevEle, t_fun);
-      if (~result) {
+      if (result === undefined) this.clearAll("Invalid syntax");
+      else {
         update_p.textContent = `${t_fun} ( ${prevEle.join("")} ) = ${result}`;
+
+        result = Array.from(result.toString());
+        stack.pop();
+        stack.push(result);
+        this.store = this.normal_calculate(stack.allEle());
+        take_p.textContent = this.store;
+        while (true) {
+          let popped = stack.pop();
+          if (!popped) break;
+        }
+
+        stack.push(Array.from(this.store.toString()));
       }
-      result = Array.from(result.toString());
-      stack.pop();
-      stack.push(result);
-      this.store = this.normal_calculate(stack.allEle());
-      take_p.textContent = this.store;
-      while (true) {
-        let popped = stack.pop();
-        if (!popped) break;
-      }
-      console.log(stack.allEle(), this.store.toString());
-      stack.push(Array.from(this.store.toString()));
-      console.log(stack.allEle());
     } else if (stack.length() === 0) {
       let result = this.trigometric_calculate(["0"], t_fun);
+
       this.store = result;
-      if (~result) {
+      if (result === undefined) this.clearAll("Invalid syntax");
+      else {
         update_p.textContent = `${t_fun} ( ${["0"].join("")} ) = ${result}`;
+
+        result = Array.from(result.toString());
+        stack.pop();
+        stack.push(result);
+        take_p.textContent = this.store;
       }
-      result = Array.from(result.toString());
-      stack.pop();
-      stack.push(result);
-      take_p.textContent = this.store;
     } else {
       switch (prevEle) {
         case "%":
@@ -180,54 +250,56 @@ class Calculator {
           break;
       }
     }
-    console.log(stack.allEle());
+
     this.blink();
   };
 
   roots = (rt) => {
+    this.record = 1;
     this.flag = 1;
     let prevEle = stack.lastEle();
     if (Array.isArray(prevEle) && stack.length() <= 2) {
       let result = this.root_calculate(prevEle, rt);
       this.store = result;
-      if (~result) {
+      if (result === undefined) this.clearAll("Invalid syntax");
+      else {
         update_p.textContent = `${rt} ( ${prevEle.join("")} ) = ${result}`;
+        result = Array.from(result.toString());
+        stack.pop();
+        stack.push(result);
+        take_p.textContent = this.store;
       }
-      result = Array.from(result.toString());
-      stack.pop();
-      stack.push(result);
-      take_p.textContent = this.store;
     } else if (Array.isArray(prevEle) && stack.length() === 3) {
       let result = this.root_calculate(prevEle, rt);
-      if (~result) {
+      if (result === undefined) this.clearAll("Invalid syntax");
+      else {
         update_p.textContent = `${rt} ( ${prevEle.join("")} ) = ${result}`;
-      }
-      result = Array.from(result.toString());
-      stack.pop();
-      stack.push(result);
-      this.store = this.normal_calculate(stack.allEle());
-      take_p.textContent = this.store;
-      console.log(stack.allEle());
+        result = Array.from(result.toString());
+        stack.pop();
+        stack.push(result);
+        this.store = this.normal_calculate(stack.allEle());
+        take_p.textContent = this.store;
 
-      this.store = this.normal_calculate(stack.allEle());
-      take_p.textContent = this.store;
-      while (true) {
-        let popped = stack.pop();
-        if (!popped) break;
+        this.store = this.normal_calculate(stack.allEle());
+        take_p.textContent = this.store;
+        while (true) {
+          let popped = stack.pop();
+          if (!popped) break;
+        }
+
+        stack.push(Array.from(this.store.toString()));
       }
-      console.log(stack.allEle(), this.store.toString());
-      stack.push(Array.from(this.store.toString()));
-      console.log(stack.allEle());
     } else if (stack.length() === 0) {
       let result = this.root_calculate(["0"], rt);
       this.store = result;
-      if (~result) {
+      if (result === undefined) this.clearAll("Invalid syntax");
+      else {
         update_p.textContent = `${rt} ( ${["0"].join("")} ) = ${result}`;
+        result = Array.from(result.toString());
+        stack.pop();
+        stack.push(result);
+        take_p.textContent = this.store;
       }
-      result = Array.from(result.toString());
-      stack.pop();
-      stack.push(result);
-      take_p.textContent = this.store;
     } else {
       switch (prevEle) {
         case "%":
@@ -250,11 +322,11 @@ class Calculator {
           break;
       }
     }
-    console.log(stack.allEle());
     this.blink();
   };
 
   oneByX = () => {
+    this.record = 1;
     this.flag = 1;
     let prevEle = stack.lastEle();
     if (Array.isArray(prevEle) && stack.length() <= 2) {
@@ -278,7 +350,6 @@ class Calculator {
         stack.push(result);
         this.store = this.normal_calculate(stack.allEle());
         take_p.textContent = this.store;
-        console.log(stack.allEle());
 
         this.store = this.normal_calculate(stack.allEle());
         take_p.textContent = this.store;
@@ -286,9 +357,7 @@ class Calculator {
           let popped = stack.pop();
           if (!popped) break;
         }
-        console.log(stack.allEle(), this.store.toString());
         stack.push(Array.from(this.store.toString()));
-        console.log(stack.allEle());
       } else if (result === undefined) {
         this.clearAll("Invalid Syntax");
       }
@@ -318,7 +387,6 @@ class Calculator {
       }
     }
     this.blink();
-    console.log(stack.allEle());
   };
 
   normal_calculate = ([a1, o, a2]) => {
@@ -330,13 +398,21 @@ class Calculator {
       case "-":
         return a1 - a2;
       case "/":
-        if (a2 === 0) this.flag = 0;
-        else return a1 / a2;
+        if (a2 === 0) {
+          this.flag = 0;
+          break;
+        } else {
+          return a1 / a2;
+        }
       case "*":
         return a1 * a2;
       case "%":
-        if (a2 === 0) this.flag = 0;
-        else return (a1 / a2) * 100;
+        if (a2 === 0) {
+          this.flag = 0;
+          break;
+        } else {
+          return (a1 / a2) * 100;
+        }
     }
   };
 
@@ -354,11 +430,15 @@ class Calculator {
 
   root_calculate = (ele, rt) => {
     ele = +ele.join("");
-    switch (rt) {
-      case "sqrt":
-        return Math.sqrt(ele);
-      case "cbrt":
-        return Math.cbrt(ele);
+    if (!(ele < 0)) {
+      switch (rt) {
+        case "sqrt":
+          return Math.sqrt(ele);
+        case "cbrt":
+          return Math.cbrt(ele);
+      }
+    } else {
+      return;
     }
   };
 
@@ -366,7 +446,6 @@ class Calculator {
     ele = +ele.join("");
     if (ele === 0) {
       this.flag = 0;
-      return;
     } else {
       return 1 / ele;
     }
