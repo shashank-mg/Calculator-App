@@ -204,12 +204,14 @@ class Calculator {
       let result = this.trigometric_calculate(prevEle, t_fun);
       if (result === undefined) this.clearAll("Invalid syntax");
       else {
-        update_p.textContent = `${t_fun} ( ${prevEle.join("")} ) = ${result}`;
+        update_p.textContent = `${t_fun} ( ${prevEle.join(
+          ""
+        )} ) = ${result} + ANS `;
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
         this.store = this.normal_calculate(stack.allEle());
-        take_p.textContent = `ANS + ${this.store}`;
+        take_p.textContent = `${this.store}`;
         while (true) {
           let popped = stack.pop();
           if (!popped) break;
@@ -277,12 +279,14 @@ class Calculator {
       let result = this.root_calculate(prevEle, rt);
       if (result === undefined) this.clearAll("Invalid syntax");
       else {
-        update_p.textContent = `${rt} ( ${prevEle.join("")} ) = ${result}`;
+        update_p.textContent = `${rt} ( ${prevEle.join(
+          ""
+        )} ) = ${result} + ANS`;
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
         this.store = this.normal_calculate(stack.allEle());
-        take_p.textContent = `ANS + ${this.store}`;
+        take_p.textContent = `${this.store}`;
 
         while (true) {
           let popped = stack.pop();
@@ -349,12 +353,12 @@ class Calculator {
     } else if (Array.isArray(prevEle) && stack.length() === 3) {
       let result = this.oneByX_calculate(prevEle);
       if (result) {
-        update_p.textContent = `1/${prevEle.join("")} = ${result}`;
+        update_p.textContent = `1/${prevEle.join("")} = ${result} + ANS`;
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
         this.store = this.normal_calculate(stack.allEle());
-        take_p.textContent = `ANS + ${this.store}`;
+        take_p.textContent = `${this.store}`;
 
         while (true) {
           let popped = stack.pop();
