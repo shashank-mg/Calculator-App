@@ -20,7 +20,6 @@ class Calculator {
       stack.pop();
       this.record = 0;
     }
-
     if (Array.isArray(stack.lastEle())) {
       if (this.n_stack.length < 21) {
         this.n_stack.push(n);
@@ -38,7 +37,6 @@ class Calculator {
         this.store += n;
       }
     }
-
     this.blink();
   };
 
@@ -46,6 +44,11 @@ class Calculator {
     this.record = 0;
     take_p.textContent = "";
     this.flag = 1;
+    if (stack.length()) {
+      if (stack.allEle()[0].length === 0) {
+        stack.allEle()[0] = ["0"];
+      }
+    }
     let prevEle = stack.lastEle();
     if (Array.isArray(prevEle) && stack.length() === 1) {
       stack.push(o);
@@ -99,6 +102,7 @@ class Calculator {
           break;
       }
     }
+
     this.flag = 1;
     this.blink();
   };
@@ -107,7 +111,7 @@ class Calculator {
     this.flag = 1;
     this.record = 1;
     let prevEle = stack.lastEle();
-    if (stack.length() <= 2) {
+    if (stack.length() <= 2 && stack.length() >= 1) {
       let combine;
       if (Array.isArray(prevEle)) {
         combine = prevEle.join("");
@@ -139,7 +143,7 @@ class Calculator {
           stack.push(result);
         }
       }
-    } else {
+    } else if (stack.length() === 3) {
       let result = this.normal_calculate(stack.allEle());
       if (result === undefined) this.clearAll("Invalid Syntax");
       else {
@@ -152,8 +156,8 @@ class Calculator {
         }
         stack.push(result);
       }
+    } else {
     }
-
     this.blink();
   };
 
@@ -167,6 +171,7 @@ class Calculator {
         take_p.textContent = change.join("");
       }
     }
+    this.blink();
   };
 
   clearAll = (def = 0) => {
@@ -190,11 +195,9 @@ class Calculator {
       if (result === undefined) this.clearAll("Invalid syntax");
       else {
         update_p.textContent = `${t_fun} ( ${prevEle.join("")} ) = ${result}`;
-
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
-
         take_p.textContent = this.store;
       }
     } else if (Array.isArray(prevEle) && stack.length() === 3) {
@@ -202,12 +205,11 @@ class Calculator {
       if (result === undefined) this.clearAll("Invalid syntax");
       else {
         update_p.textContent = `${t_fun} ( ${prevEle.join("")} ) = ${result}`;
-
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
         this.store = this.normal_calculate(stack.allEle());
-        take_p.textContent = this.store;
+        take_p.textContent = `ANS + ${this.store}`;
         while (true) {
           let popped = stack.pop();
           if (!popped) break;
@@ -222,7 +224,6 @@ class Calculator {
       if (result === undefined) this.clearAll("Invalid syntax");
       else {
         update_p.textContent = `${t_fun} ( ${["0"].join("")} ) = ${result}`;
-
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
@@ -238,16 +239,19 @@ class Calculator {
           stack.pop();
           let result = this.trigometric_calculate(stack.lastEle(), t_fun);
           this.store = result;
-          if (~result) {
+          if (result == undefined) {
+            this.clearAll("Invalid Syntax");
+            break;
+          } else {
             update_p.textContent = `${t_fun} ( ${stack
               .lastEle()
               .join("")} ) = ${result}`;
+            take_p.textContent = this.store;
+            result = Array.from(result.toString());
+            stack.pop();
+            stack.push(result);
+            break;
           }
-          take_p.textContent = this.store;
-          result = Array.from(result.toString());
-          stack.pop();
-          stack.push(result);
-          break;
       }
     }
 
@@ -278,10 +282,8 @@ class Calculator {
         stack.pop();
         stack.push(result);
         this.store = this.normal_calculate(stack.allEle());
-        take_p.textContent = this.store;
+        take_p.textContent = `ANS + ${this.store}`;
 
-        this.store = this.normal_calculate(stack.allEle());
-        take_p.textContent = this.store;
         while (true) {
           let popped = stack.pop();
           if (!popped) break;
@@ -310,16 +312,19 @@ class Calculator {
           stack.pop();
           let result = this.root_calculate(stack.lastEle(), rt);
           this.store = result;
-          if (~result) {
+          if (result === undefined) {
+            this.clearAll("Invalid Syntax");
+            break;
+          } else {
             update_p.textContent = `${rt} ( ${stack
               .lastEle()
               .join("")} ) = ${result}`;
+            take_p.textContent = this.store;
+            result = Array.from(result.toString());
+            stack.pop();
+            stack.push(result);
+            break;
           }
-          take_p.textContent = this.store;
-          result = Array.from(result.toString());
-          stack.pop();
-          stack.push(result);
-          break;
       }
     }
     this.blink();
@@ -349,10 +354,8 @@ class Calculator {
         stack.pop();
         stack.push(result);
         this.store = this.normal_calculate(stack.allEle());
-        take_p.textContent = this.store;
+        take_p.textContent = `ANS + ${this.store}`;
 
-        this.store = this.normal_calculate(stack.allEle());
-        take_p.textContent = this.store;
         while (true) {
           let popped = stack.pop();
           if (!popped) break;
