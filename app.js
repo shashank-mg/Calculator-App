@@ -204,9 +204,9 @@ class Calculator {
       let result = this.trigometric_calculate(prevEle, t_fun);
       if (result === undefined) this.clearAll("Invalid syntax");
       else {
-        update_p.textContent = `${t_fun} ( ${prevEle.join(
-          ""
-        )} ) = ${result} + ANS `;
+        update_p.textContent = `ANS ${
+          stack.allEle()[1]
+        } ${t_fun} ( ${prevEle.join("")} )`;
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
@@ -279,9 +279,9 @@ class Calculator {
       let result = this.root_calculate(prevEle, rt);
       if (result === undefined) this.clearAll("Invalid syntax");
       else {
-        update_p.textContent = `${rt} ( ${prevEle.join(
+        update_p.textContent = `ANS ${stack.allEle()[1]} ${rt} ( ${prevEle.join(
           ""
-        )} ) = ${result} + ANS`;
+        )} )`;
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
@@ -353,7 +353,9 @@ class Calculator {
     } else if (Array.isArray(prevEle) && stack.length() === 3) {
       let result = this.oneByX_calculate(prevEle);
       if (result) {
-        update_p.textContent = `1/${prevEle.join("")} = ${result} + ANS`;
+        update_p.textContent = `ANS ${stack.allEle()[1]} ( 1/${prevEle.join(
+          ""
+        )} )`;
         result = Array.from(result.toString());
         stack.pop();
         stack.push(result);
