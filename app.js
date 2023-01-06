@@ -420,7 +420,7 @@ class Calculator {
           this.flag = 0;
           break;
         } else {
-          return (a1 / a2) * 100;
+          return (a1 / 100) * a2;
         }
     }
   };
